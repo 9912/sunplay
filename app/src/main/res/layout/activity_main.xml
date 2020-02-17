@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#000000">
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/button1"
+        android:layout_alignBottom="@+id/button1"
+        android:layout_toRightOf="@+id/button1"
+        android:onClick="stopButtonClick"
+        android:text="Stop"/>
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="24dp"
+        android:onClick="playButtonClick"
+        android:text="Play"/>
+
+    <EditText
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="10"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/button1"
+        android:layout_alignLeft="@id/button1"
+        android:id="@+id/Offset"
+        android:background="#444444"/>
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:text="SunPlay for Android by 9912. Insert a number into the field to play from the offset, press 'Prev' or 'Next' to change betweeen songs."
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_below="@id/Offset"
+        android:layout_alignLeft="@id/Offset"
+        android:layout_alignRight="@id/Offset"
+        android:textColor="#888888"
+        android:id="@+id/activitymainTextView1"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Prev"
+        android:layout_below="@id/activitymainTextView1"
+        android:layout_alignLeft="@id/activitymainTextView1"
+        android:id="@+id/button3"
+        android:onClick="PrevSong"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:id="@+id/button4"
+        android:layout_toRightOf="@id/button3"
+        android:layout_alignBaseline="@id/button3"
+        android:layout_alignBottom="@id/button3"
+        android:onClick="NextSong"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SongName"
+        android:layout_below="@id/button3"
+        android:layout_alignLeft="@id/button3"
+        android:textColor="#888888"
+        android:id="@+id/songtitle"/>
+
+</RelativeLayout>
+
