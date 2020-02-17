@@ -17,12 +17,13 @@ The four basic buttons are present: Play, Stop, Previous(Prev) and Next, an addi
 # To Do:
 
 - [x] <del>Create Proyect</del>
+- [x] <del>App Icon</del>
 - [ ] Option to change sample rate and buffer size
 - [ ] Load from folder on external storage
 
 # Warning!
 
-App in alpha stage, some devices can get stuck or freeze with complex modules due of OpenSL implementation of the device, SunVox DLL is robust as awesome.
+App in alpha stage, some devices can get stuck or freeze with complex modules due of OpenSL implementation of the device, SunVox DLL is robust as awesome.:+1:
 
 Powered by [SunVox](https://warmplace.ru/soft/sunvox) (modular synth & tracker)
 Copyright (c) 2008 - 2020, Alexander Zolotov <nightradio@gmail.com>, [WarmPlace.ru](https://warmplace.ru)
