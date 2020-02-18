@@ -1,8 +1,6 @@
 package net.arist.sunplay;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -32,6 +30,7 @@ public class MainActivity extends Activity {
 	TextView song_title;
 	Context context;
 	AssetManager assetManager;
+	String path = "";
 	
 	
 	@Override
@@ -39,7 +38,10 @@ public class MainActivity extends Activity {
 	{
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
-
+		path = Environment.getExternalStorageDirectory().toString()+"/SunPlay/";
+		File f;        
+		File file[];
+		File sfile[];
 		SetSustainedPerformanceMode( true );
 		int optimal_buffer_size = GetAudioOutputBufferSize();
 		int optimal_sample_rate = GetAudioOutputSampleRate();
@@ -70,27 +72,26 @@ public class MainActivity extends Activity {
 		context = getApplicationContext();
 		assetManager = context.getAssets();
 		try{
-			//song_title.setText(Integer.toString(assetManager.list("sv").length));
-			//String svfiles[] = new String[assetManager.list("sv").length];
-			afiles = assetManager.list("sv");
+			f = new File(path);        
+			file[] = f.listFiles();
 		} catch (IOException e) {
 			Log.e( "SunVoxPlayer", "File list error" );
 		}
 		
-		for (String i : afiles){
+		for (File i : file){
 			if(i.endsWith(".sunvox")){
 				svcount++;
 			}
 		}
-		svfiles = new String[svcount];
+		sfile = new File[svcount];
 		svcount = 0;
-		for (String i : afiles){
+		for (File i : file){
 			if(i.endsWith(".sunvox")){
-				svfiles[svcount] = i;
+				sfile[svcount] = i;
 				svcount++;
 			}
 		}
-		((TextView) findViewById(R.id.songtitle)).setText(svfiles[0]);
+		((TextView) findViewById(R.id.songtitle)).setText(sfile[0].getName());
 
 		sunvox_version = SunVoxLib.init( cfg, sample_rate, 2, 0 );
 		if( sunvox_version > 0 )
@@ -106,9 +107,9 @@ public class MainActivity extends Activity {
 	        //Load test song from raw resource:
 	        byte[] song_data = null;
 	        try {
-				song_data = convertStreamToByteArray( assetManager.open( "sv/" + svfiles[0] ) );
+				song_data = convertStreamToByteArray( new FileInputStream( sfile[0]) );
 			} catch( NotFoundException e ) {
-				Log.e( "SunVoxPlayer", svfiles[0] + " not found" );
+				Log.e( "SunVoxPlayer", sfile[0] + " not found" );
 			} catch( IOException e ) {
 				Log.e( "SunVoxPlayer", "Assets opening error" );
 			}
@@ -187,12 +188,12 @@ public class MainActivity extends Activity {
 	
 	public void PrevSong(View view){
 		if(song_index <= 0){
-			song_index = svfiles.length - 1;
+			song_index = sfile.length - 1;
 		}else{
 			song_index--;
 		}
-		svsong = svfiles[song_index];
-		((TextView) findViewById(R.id.songtitle)).setText(svfiles[song_index]);
+		svsong = sfile[song_index].getName();
+		((TextView) findViewById(R.id.songtitle)).setText(sfile[song_index]);
 		
 		if( sunvox_version > 0 )
 		{
@@ -200,7 +201,7 @@ public class MainActivity extends Activity {
 		}
 		byte[] song_data = null;
 		try {
-			song_data = convertStreamToByteArray( assetManager.open( "sv/" + svsong ));
+			song_data = convertStreamToByteArray( new FileInputStream( sfile[song_index] ));
 		} catch( NotFoundException e ) {
 			Log.e( "SunVoxPlayer", svsong + " not found" );
 		} catch( IOException e ) {
@@ -234,13 +235,13 @@ public class MainActivity extends Activity {
 	}
 	
 	public void NextSong(View view){
-		if(song_index >= svfiles.length - 1){
+		if(song_index >= sfile.length - 1){
 			song_index = 0;
 		}else{
 			song_index++;
 		}
-		svsong = svfiles[song_index];
-		((TextView) findViewById(R.id.songtitle)).setText(svfiles[song_index]);
+		svsong = sfile[song_index].getName();
+		((TextView) findViewById(R.id.songtitle)).setText(sfile[song_index]);
 
 		if( sunvox_version > 0 )
 		{
@@ -248,7 +249,7 @@ public class MainActivity extends Activity {
 		}
 		byte[] song_data = null;
 		try {
-			song_data = convertStreamToByteArray( assetManager.open( "sv/" + svsong ));
+			song_data = convertStreamToByteArray( new FileInputStream( sfile[song_index] ));
 		} catch( NotFoundException e ) {
 			Log.e( "SunVoxPlayer", svsong + " not found" );
 		} catch( IOException e ) {
