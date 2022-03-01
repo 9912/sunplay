@@ -3,7 +3,16 @@ package net.arist.sunplay;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Arrays;
 
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.content.pm.PackageManager;
+import android.Manifest;
 import android.content.Context;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -13,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.os.Process;
+import android.os.Environment;
 
 import nightradio.sunvoxlib.SunVoxLib;
 import android.widget.*;
@@ -28,18 +38,33 @@ public class MainActivity extends Activity {
 	String svfiles[];
 	String afiles[];
 	String svsong = "";
+	String baseDir;
 	int song_index = 0;
 	TextView song_title;
 	Context context;
 	AssetManager assetManager;
-	
-	
+	String cfg = "";
+	int newfreq;
+	int newbuffer;
+	int sample_rate = 44100;
+	/**
+	 * permissions request code
+	 */
+	private final static int REQUEST_CODE_ASK_PERMISSIONS = 1;
+
+	/**
+	 * Permissions that need to be explicitly requested from end user.
+	 */
+	private static final String[] REQUIRED_SDK_PERMISSIONS = new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE };
+
+    
 	@Override
 	protected void onCreate( Bundle savedInstanceState ) 
 	{
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 		SetSustainedPerformanceMode( true );
+		checkPermissions();
 		int optimal_buffer_size = GetAudioOutputBufferSize();
 		int optimal_sample_rate = GetAudioOutputSampleRate();
 		int sample_rate = 44100;
@@ -71,16 +96,28 @@ public class MainActivity extends Activity {
 		try{
 			//song_title.setText(Integer.toString(assetManager.list("sv").length));
 			//String svfiles[] = new String[assetManager.list("sv").length];
-			afiles = assetManager.list("sv");
+			afiles = assetManager.list("");
+            baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+            ArrayList<String> result = new ArrayList<String>(); //ArrayList cause you don't know how many files there is
+            File folder = new File(baseDir + "/sunvoxfiles"); //This is just to cast to a File type since you pass it as a String
+            File[] filesInFolder = folder.listFiles(); // This returns all the folders and files in your path
+            for (File file : filesInFolder) { //For each of the entries do:
+                if (!file.isDirectory() && getFileExtension(file).equals("sunvox")) { //check that it's not a dir and is a *.sunvox file
+                    result.add(new String(file.getName())); //push the filename as a string
+                }
+            }
+            svfiles = result.toArray(new String[0]);
+            Arrays.sort(svfiles);
 		} catch (IOException e) {
 			Log.e( "SunVoxPlayer", "File list error" );
 		}
-		
+		/*
 		for (String i : afiles){
 			if(i.endsWith(".sunvox")){
 				svcount++;
 			}
 		}
+        
 		svfiles = new String[svcount];
 		svcount = 0;
 		for (String i : afiles){
@@ -89,6 +126,7 @@ public class MainActivity extends Activity {
 				svcount++;
 			}
 		}
+        */
 		((TextView) findViewById(R.id.songtitle)).setText(svfiles[0]);
 
 		sunvox_version = SunVoxLib.init( cfg, sample_rate, 2, 0 );
@@ -101,11 +139,11 @@ public class MainActivity extends Activity {
 	        
 	        //Open audio slot #0:
 	        SunVoxLib.open_slot( 0 );
-	        
+	        /*
 	        //Load test song from raw resource:
 	        byte[] song_data = null;
 	        try {
-				song_data = convertStreamToByteArray( assetManager.open( "sv/" + svfiles[0] ) );
+				//song_data = convertStreamToByteArray( assetManager.open( svfiles[0] ) );
 			} catch( NotFoundException e ) {
 				Log.e( "SunVoxPlayer", svfiles[0] + " not found" );
 			} catch( IOException e ) {
@@ -113,12 +151,19 @@ public class MainActivity extends Activity {
 			}
 	        if( song_data != null )
 	        {
-	        	int rv = SunVoxLib.load_from_memory( 0, song_data );
+	        	//int rv = SunVoxLib.load_from_memory( 0, song_data );
+	        	int rv = SunVoxLib.load( 0, svfiles[0] );
 	        	if( rv == 0 )
 	        		Log.i( "SunVoxPlayer", "Song loaded" );
 	        	else
 	        		Log.e( "SunVoxPlayer", "Song load error " + rv );
-	        }	        
+	        }
+			*/
+			int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svfiles[0] );
+	        if( rv == 0 )
+	        	Log.i( "SunVoxPlayer", "Song loaded" );
+	        else
+	        	Log.e( "SunVoxPlayer", "Song load error " + rv + " " + baseDir + "/sunvoxfiles/" + svsong );
 	    }
 		else
 		{
@@ -197,9 +242,10 @@ public class MainActivity extends Activity {
 		{
 			SunVoxLib.stop( 0 );
 		}
-		byte[] song_data = null;
+		/*
+        byte[] song_data = null;
 		try {
-			song_data = convertStreamToByteArray( assetManager.open( "sv/" + svsong ));
+			song_data = convertStreamToByteArray( assetManager.open( svsong ));
 		} catch( NotFoundException e ) {
 			Log.e( "SunVoxPlayer", svsong + " not found" );
 		} catch( IOException e ) {
@@ -213,7 +259,14 @@ public class MainActivity extends Activity {
 			else
 				Log.e( "SunVoxPlayer", "Song load error " + rv );
 		}
-		if(((EditText)findViewById(R.id.Offset)).getText().toString().matches("")){
+		*/
+       	int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svsong );
+		if( rv == 0 )
+			Log.i( "SunVoxPlayer", "Song loaded" );
+		else
+			Log.e( "SunVoxPlayer", "Song load error " + rv + " " + baseDir + "/sunvoxfiles/" + svsong );
+        
+        if(((EditText)findViewById(R.id.Offset)).getText().toString().matches("")){
 			fileoffset = 0;
 		}else{
 			fileoffset = Integer.parseInt(((EditText)findViewById(R.id.Offset)).getText().toString());
@@ -241,13 +294,14 @@ public class MainActivity extends Activity {
 		svsong = svfiles[song_index];
 		((TextView) findViewById(R.id.songtitle)).setText(svfiles[song_index]);
 
-		if( sunvox_version > 0 )
+		/*
+        if( sunvox_version > 0 )
 		{
 			SunVoxLib.stop( 0 );
 		}
 		byte[] song_data = null;
 		try {
-			song_data = convertStreamToByteArray( assetManager.open( "sv/" + svsong ));
+			song_data = convertStreamToByteArray( assetManager.open( svsong ));
 		} catch( NotFoundException e ) {
 			Log.e( "SunVoxPlayer", svsong + " not found" );
 		} catch( IOException e ) {
@@ -261,7 +315,14 @@ public class MainActivity extends Activity {
 			else
 				Log.e( "SunVoxPlayer", "Song load error " + rv );
 		}
-		if(((EditText)findViewById(R.id.Offset)).getText().toString().matches("")){
+		*/
+       	int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svsong );
+		if( rv == 0 )
+			Log.i( "SunVoxPlayer", "Song loaded" );
+		else
+			Log.e( "SunVoxPlayer", "Song load error " + rv + " " + baseDir + "/sunvoxfiles/" + svsong );        
+        
+        if(((EditText)findViewById(R.id.Offset)).getText().toString().matches("")){
 			fileoffset = 0;
 		}else{
 			fileoffset = Integer.parseInt(((EditText)findViewById(R.id.Offset)).getText().toString());
@@ -279,8 +340,8 @@ public class MainActivity extends Activity {
 	        SunVoxLib.play( 0 );	        
 		}
 	}
-	
-	private byte[] convertStreamToByteArray( InputStream is ) throws IOException 
+		
+    private byte[] convertStreamToByteArray( InputStream is ) throws IOException 
 	{
 	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	    byte[] buff = new byte[ 10240 ];
@@ -335,6 +396,57 @@ public class MainActivity extends Activity {
 		if( getWindow() == null ) return -1;
 		getWindow().setSustainedPerformanceMode( enable );
 		return 0;
+	}
+    
+    private static String getFileExtension(File file) {
+        String fileName = file.getName();
+        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+        return fileName.substring(fileName.lastIndexOf(".")+1);
+        else return "";
+    }
+    
+    /**
+	 * Checks the dynamically-controlled permissions and requests missing permissions from end user.
+	 */
+	protected void checkPermissions() {
+	  final List<String> missingPermissions = new ArrayList<String>();
+	  // check all required dynamic permissions
+	  for (final String permission : REQUIRED_SDK_PERMISSIONS) {
+	    final int result = ContextCompat.checkSelfPermission(this, permission);
+	    if (result != PackageManager.PERMISSION_GRANTED) {
+	      missingPermissions.add(permission);
+	    }
+	  }
+	  if (!missingPermissions.isEmpty()) {
+	    // request all missing permissions
+	    final String[] permissions = missingPermissions
+	        .toArray(new String[missingPermissions.size()]);
+	    ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE_ASK_PERMISSIONS);
+	  } else {
+	    final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
+	    Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
+	    onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
+	        grantResults);
+	  }
+	}
+	
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+	    @NonNull int[] grantResults) {
+	  switch (requestCode) {
+	    case REQUEST_CODE_ASK_PERMISSIONS:
+	      for (int index = permissions.length - 1; index >= 0; --index) {
+	        if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+	          // exit the app if one permission is not granted
+	          Toast.makeText(this, "Required permission '" + permissions[index]
+	              + "' not granted, exiting", Toast.LENGTH_LONG).show();
+	          finish();
+	          return;
+	        }
+	      }
+	      // all permissions were granted
+	      break;
+	  }
 	}
 
 }

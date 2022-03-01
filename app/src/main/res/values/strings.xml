@@ -4,5 +4,7 @@
     <string name="app_name">SunPlay</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
+    <string name="freqrate">Frequency rate (Hz)</string>
+    <string name="buffer">Buffer (ms)</string>
 
 </resources>
