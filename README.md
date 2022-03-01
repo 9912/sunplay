@@ -2,7 +2,15 @@
 Sunvox Player for Android, uses SunVox DLL
 
 # Building
-Built and coded with [AIDE](https://www.android-ide.com/), but you can use Android Studio.
+For compiling on Android phones, [AIDE](https://www.android-ide.com/) is used, but you can use Android Studio also if you're working on desktop.
+- Get AIDE from Google Play.
+- Download the repo and unzip it.
+- Open AIDE and navigate to sunplay-master/app, the option "Open this project" will appear.
+- On the upper toolbar pres the Play button to compile and run, make sure to give "Unknown Origin" permission before installing.
+- Open the app once installed
+
+NOTE: The free version of AIDE only compiles, to circumvent the purchase to unlock all AIDE features, I strongly recommend using [QuickEdit](https://play.google.com/store/apps/details?id=com.rhmsoft.edit).
+
 ## However...
 You must create this folder in order to put the songs (*.sunvox files) onto this path:
 ```
@@ -30,4 +38,4 @@ The four basic buttons are present: Play, Stop, Previous(Prev) and Next, an addi
 App in beta stage, some devices can get stuck or freeze with complex modules due of OpenSL implementation of the device, follow optimization tips on [SunVox forums](https://warmplace.ru/forum/viewtopic.php?f=3&t=2379&p=7730)
 
 Powered by [SunVox](https://warmplace.ru/soft/sunvox) (modular synth & tracker)
-Copyright (c) 2008 - 2020, Alexander Zolotov <nightradio@gmail.com>, [WarmPlace.ru](https://warmplace.ru)
+Copyright (c) 2008 - 2022, Alexander Zolotov <nightradio@gmail.com>, [WarmPlace.ru](https://warmplace.ru)
