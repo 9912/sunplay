@@ -27,9 +27,11 @@ The four basic buttons are present: Play, Stop, Previous(Prev) and Next, an addi
 - [x] <del>Create Proyect</del>
 - [x] <del>App Icon</del>
 - [x] <del>Load from folder on external storage</del>
+- [x] <del>Changeable frame rate and buffer</del>
 
 # Changelog
 
+- v1.2 Beta stage, now you can change frame rate and buffer if you want to tweak (by your own responsibility)
 - v1.1 Beta stage, now you can put your files onto your phone storage, packing songs into the APK is no longer needed, SunVox DLL updated to v2.0c
 - v1.0 Alpha stage, packing songs on the APK is required
 

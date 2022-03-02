@@ -36,13 +36,11 @@ public class MainActivity extends Activity {
 	int fileoffset = 0;
 	int svcount = 0;
 	String svfiles[];
-	String afiles[];
 	String svsong = "";
 	String baseDir;
 	int song_index = 0;
 	TextView song_title;
 	Context context;
-	AssetManager assetManager;
 	String cfg = "";
 	int newfreq;
 	int newbuffer;
@@ -68,7 +66,6 @@ public class MainActivity extends Activity {
 		int optimal_buffer_size = GetAudioOutputBufferSize();
 		int optimal_sample_rate = GetAudioOutputSampleRate();
 		int sample_rate = 44100;
-		String cfg = "";
 		if( optimal_sample_rate > 0 && optimal_buffer_size > 0 )
 		{
 			sample_rate = optimal_sample_rate;
@@ -92,41 +89,17 @@ public class MainActivity extends Activity {
 		song_title = new TextView(this);
 		song_title.findViewById(R.id.songtitle);
 		context = getApplicationContext();
-		assetManager = context.getAssets();
-		try{
-			//song_title.setText(Integer.toString(assetManager.list("sv").length));
-			//String svfiles[] = new String[assetManager.list("sv").length];
-			afiles = assetManager.list("");
-            baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
-            ArrayList<String> result = new ArrayList<String>(); //ArrayList cause you don't know how many files there is
-            File folder = new File(baseDir + "/sunvoxfiles"); //This is just to cast to a File type since you pass it as a String
-            File[] filesInFolder = folder.listFiles(); // This returns all the folders and files in your path
-            for (File file : filesInFolder) { //For each of the entries do:
-                if (!file.isDirectory() && getFileExtension(file).equals("sunvox")) { //check that it's not a dir and is a *.sunvox file
-                    result.add(new String(file.getName())); //push the filename as a string
-                }
+		baseDir = Environment.getExternalStorageDirectory().getAbsolutePath();
+        ArrayList<String> result = new ArrayList<String>(); //ArrayList cause you don't know how many files there is
+        File folder = new File(baseDir + "/sunvoxfiles"); //This is just to cast to a File type since you pass it as a String
+        File[] filesInFolder = folder.listFiles(); // This returns all the folders and files in your path
+        for (File file : filesInFolder) { //For each of the entries do:
+            if (!file.isDirectory() && getFileExtension(file).equals("sunvox")) { //check that it's not a dir and is a *.sunvox file
+                result.add(new String(file.getName())); //push the filename as a string
             }
-            svfiles = result.toArray(new String[0]);
-            Arrays.sort(svfiles);
-		} catch (IOException e) {
-			Log.e( "SunVoxPlayer", "File list error" );
-		}
-		/*
-		for (String i : afiles){
-			if(i.endsWith(".sunvox")){
-				svcount++;
-			}
-		}
-        
-		svfiles = new String[svcount];
-		svcount = 0;
-		for (String i : afiles){
-			if(i.endsWith(".sunvox")){
-				svfiles[svcount] = i;
-				svcount++;
-			}
-		}
-        */
+        }
+        svfiles = result.toArray(new String[0]);
+        Arrays.sort(svfiles);
 		((TextView) findViewById(R.id.songtitle)).setText(svfiles[0]);
 
 		sunvox_version = SunVoxLib.init( cfg, sample_rate, 2, 0 );
@@ -139,26 +112,7 @@ public class MainActivity extends Activity {
 	        
 	        //Open audio slot #0:
 	        SunVoxLib.open_slot( 0 );
-	        /*
-	        //Load test song from raw resource:
-	        byte[] song_data = null;
-	        try {
-				//song_data = convertStreamToByteArray( assetManager.open( svfiles[0] ) );
-			} catch( NotFoundException e ) {
-				Log.e( "SunVoxPlayer", svfiles[0] + " not found" );
-			} catch( IOException e ) {
-				Log.e( "SunVoxPlayer", "Assets opening error" );
-			}
-	        if( song_data != null )
-	        {
-	        	//int rv = SunVoxLib.load_from_memory( 0, song_data );
-	        	int rv = SunVoxLib.load( 0, svfiles[0] );
-	        	if( rv == 0 )
-	        		Log.i( "SunVoxPlayer", "Song loaded" );
-	        	else
-	        		Log.e( "SunVoxPlayer", "Song load error " + rv );
-	        }
-			*/
+	        
 			int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svfiles[0] );
 	        if( rv == 0 )
 	        	Log.i( "SunVoxPlayer", "Song loaded" );
@@ -170,15 +124,7 @@ public class MainActivity extends Activity {
 			Log.e( "SunVoxPlayer", "Can't open SunVox library" );
 		}
 	}
- /*
-	@Override
-	public boolean onCreateOptionsMenu( Menu menu ) 
-	{
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate( R.menu.activity_main, menu );
-		return true;
-	}
-	*/
+
 	@Override
 	protected void onDestroy ()
 	{
@@ -210,11 +156,6 @@ public class MainActivity extends Activity {
 	        //Set volume:
 	        SunVoxLib.volume( 0, 256 );
 
-			/*
-	        //Get some song info:
-	        Log.i( "SunVoxPlayer", "Song name = " + SunVoxLib.get_song_name( 0 ) );
-	        */
-
 	        //Play from offset:
 	        SunVoxLib.play( 0 );	        
 		}
@@ -242,25 +183,8 @@ public class MainActivity extends Activity {
 		{
 			SunVoxLib.stop( 0 );
 		}
-		/*
-        byte[] song_data = null;
-		try {
-			song_data = convertStreamToByteArray( assetManager.open( svsong ));
-		} catch( NotFoundException e ) {
-			Log.e( "SunVoxPlayer", svsong + " not found" );
-		} catch( IOException e ) {
-			Log.e( "SunVoxPlayer", "openRawResource error" );
-		}
-		if( song_data != null )
-		{
-			int rv = SunVoxLib.load_from_memory( 0, song_data );
-			if( rv == 0 )
-				Log.i( "SunVoxPlayer", "Song loaded" );
-			else
-				Log.e( "SunVoxPlayer", "Song load error " + rv );
-		}
-		*/
-       	int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svsong );
+		
+        int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svsong );
 		if( rv == 0 )
 			Log.i( "SunVoxPlayer", "Song loaded" );
 		else
@@ -294,33 +218,89 @@ public class MainActivity extends Activity {
 		svsong = svfiles[song_index];
 		((TextView) findViewById(R.id.songtitle)).setText(svfiles[song_index]);
 
-		/*
-        if( sunvox_version > 0 )
+		if( sunvox_version > 0 )
 		{
 			SunVoxLib.stop( 0 );
 		}
-		byte[] song_data = null;
-		try {
-			song_data = convertStreamToByteArray( assetManager.open( svsong ));
-		} catch( NotFoundException e ) {
-			Log.e( "SunVoxPlayer", svsong + " not found" );
-		} catch( IOException e ) {
-			Log.e( "SunVoxPlayer", "openRawResource error" );
-		}
-		if( song_data != null )
-		{
-			int rv = SunVoxLib.load_from_memory( 0, song_data );
-			if( rv == 0 )
-				Log.i( "SunVoxPlayer", "Song loaded" );
-			else
-				Log.e( "SunVoxPlayer", "Song load error " + rv );
-		}
-		*/
-       	int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svsong );
+		
+		int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svsong );
 		if( rv == 0 )
 			Log.i( "SunVoxPlayer", "Song loaded" );
 		else
 			Log.e( "SunVoxPlayer", "Song load error " + rv + " " + baseDir + "/sunvoxfiles/" + svsong );        
+        
+        if(((EditText)findViewById(R.id.Offset)).getText().toString().matches("")){
+			fileoffset = 0;
+		}else{
+			fileoffset = Integer.parseInt(((EditText)findViewById(R.id.Offset)).getText().toString());
+		}
+		if( sunvox_version > 0 )
+		{
+	        //Disable autostop:
+	        SunVoxLib.set_autostop( 0, 0 );
+
+	        //Rewind (go to the offset):
+	        SunVoxLib.rewind( 0, fileoffset );
+
+	        //Set volume:
+	        SunVoxLib.volume( 0, 256 );
+	        SunVoxLib.play( 0 );	        
+		}
+	}
+
+	public void SetConfig(View view){
+		
+        if( sunvox_version > 0 )
+		{
+			SunVoxLib.stop( 0 );
+		    SunVoxLib.close_slot( 0 );
+			SunVoxLib.deinit();
+			Log.i( "SunVoxPlayer", "SunVox engine closed" );
+		}
+        
+        newfreq = Integer.parseInt(((EditText)findViewById(R.id.freqrateedit)).getText().toString());
+        newbuffer = Integer.parseInt(((EditText)findViewById(R.id.bufferedit)).getText().toString());
+        cfg = new String("");
+        
+        sample_rate = newfreq;
+		cfg += "buffer=" + newbuffer;
+		
+        int[] cores = GetExclusiveCores();
+		if( cores != null )
+		{
+			if( cores.length > 0 )
+			{
+				cfg += "|exclcores=";
+				for( int i = 0; i < cores.length; i++ )
+				{
+					if( i > 0 ) cfg += ",";
+					cfg += cores[i];
+				}
+			}
+		}
+		Log.v( "CFG", cfg );
+        
+        sunvox_version = SunVoxLib.init( cfg, sample_rate, 2, 0 );
+		if( sunvox_version > 0 )
+	    {
+	        int major = ( sunvox_version >> 16 ) & 255;
+	        int minor1 = ( sunvox_version >> 8 ) & 255;
+	        int minor2 = ( sunvox_version ) & 255;
+	        Log.i( "SunVoxPlayer", "SunVox lib version: " + major + " " + minor1 + " " + minor2 );
+	        
+	        //Open audio slot #0:
+	        SunVoxLib.open_slot( 0 );
+	        
+            int rv = SunVoxLib.load( 0, baseDir + "/sunvoxfiles/" + svsong );
+	        if( rv == 0 )
+	        	Log.i( "SunVoxPlayer", "Song loaded" );
+	        else
+	        	Log.e( "SunVoxPlayer", "Song load error " + rv + " " + baseDir + "/sunvoxfiles/" + svsong );
+	    }
+		else
+		{
+			Log.e( "SunVoxPlayer", "Can't open SunVox library" );
+		}
         
         if(((EditText)findViewById(R.id.Offset)).getText().toString().matches("")){
 			fileoffset = 0;
