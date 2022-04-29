@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
+        android:hint="Offset in Lines"
         android:layout_width="wrap_content"
         android:layout_below="@id/button1"
         android:layout_alignLeft="@id/button1"
@@ -40,12 +41,11 @@
     
     <TextView
         android:layout_height="wrap_content"
-        android:text="SunPlay for Android by 9912. Insert a number into the field to play from the offset, press 'Prev' or 'Next' to change betweeen songs."
+        android:text="SunPlay for Android by 9912"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
         android:layout_below="@id/Offset"
         android:layout_alignLeft="@id/Offset"
-        android:layout_alignRight="@id/Offset"
         android:textColor="#888888"
         android:id="@+id/activitymainTextView1"/>
     
@@ -76,14 +76,24 @@
         android:layout_alignLeft="@id/button3"
         android:textColor="#888888"
         android:id="@+id/songtitle"/>
+		
+	<TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/songtitle"
+        android:layout_alignLeft="@id/songtitle"
+        android:id="@+id/selecter"
+        android:textColor="#bbbbbb"
+        android:text="Press Here to select"
+        />
     
     <TextView
         android:layout_height="wrap_content"
         android:text="Settings"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_width="wrap_content"
-        android:layout_below="@id/songtitle"
-        android:layout_alignLeft="@id/songtitle"
+        android:layout_below="@id/selecter"
+        android:layout_alignLeft="@id/selecter"
         android:textColor="#888888"
         android:id="@+id/settings"/>
     
@@ -111,6 +121,8 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
+        android:layout_alignRight="@id/activitymainTextView1"
+        android:hint=" 44100 or 48000"
         android:layout_width="wrap_content"
         android:layout_below="@id/settings"
         android:layout_toRightOf="@id/freqrate"
@@ -121,6 +133,8 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="10"
+        android:layout_alignRight="@id/activitymainTextView1"
+        android:hint=" in frames like 1024"
         android:layout_width="wrap_content"
         android:layout_below="@id/freqrateedit"
         android:layout_toRightOf="@id/buffer"
