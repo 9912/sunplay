@@ -28,6 +28,10 @@ Also, there is a Settings section where you can change the frame rate and the bu
 Take account that frame rate value must be 44100 or more.
 Is recommended the following values for the buffer: 128, 256, 512, 1024, 2048, 4096. You can insert other value by your own risk.
 
+# Can't run on KitKat?
+
+Go to app/build.gradle and change targetSdkVersion to 19 instead of 30, then compile again.
+
 # To Do:
 
 - [x] <del>Create Proyect</del>
@@ -38,6 +42,7 @@ Is recommended the following values for the buffer: 128, 256, 512, 1024, 2048, 4
 
 # Changelog
 
+- v1.4 Stable, SunVox updated to v2.1
 - v1.3 Stable, Added an searchable spinner to select a song, SunVox updated to v2.0e
 - v1.2 Beta stage, now you can change frame rate and buffer if you want to tweak (by your own responsibility)
 - v1.1 Beta stage, now you can put your files onto your phone storage, packing songs into the APK is no longer needed, SunVox DLL updated to v2.0c
