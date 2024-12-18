@@ -93,6 +93,19 @@ public class MainActivity extends Activity {
 			}
 		}
 		Log.v( "CFG", cfg );
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+		    if (!Environment.isExternalStorageManager()) {
+		        try {
+		            var intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+		                    Uri.parse("package:" + packageName))
+		            startActivityForResult(intent, REQUEST_PERMISSION)
+		        } catch (e: Exception) {
+		            Logger.d(TAG, e.message)
+		            var intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
+		            startActivityForResult(intent, REQUEST_PERMISSION)
+		        }
+		    }
+		}
 
 		song_title = new TextView(this);
 		song_title.findViewById(R.id.songtitle);
