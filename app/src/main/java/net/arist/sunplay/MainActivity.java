@@ -8,9 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 
+import android.annotation.SuppressLint;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
 import android.Manifest;
 import android.content.Context;
@@ -267,7 +268,8 @@ public class MainActivity extends Activity {
 		}
 	}
 	
-	public void PrevSong(View view){
+	@SuppressLint("SuspiciousIndentation")
+    public void PrevSong(View view){
 		if(song_index <= 0){
 			song_index = svfiles.length - 1;
 		}else{

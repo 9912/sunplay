@@ -52,6 +52,7 @@ public class SunVoxLib
 	public static native int load( int slot, String name );
 	public static native int load_from_memory( int slot, byte[] data );
 	public static native int save( int slot, String name );
+	public static native byte[] save_to_memory( int slot );
 	public static native int play( int slot );
 	public static native int play_from_beginning( int slot );
 	public static native int stop( int slot );
@@ -83,6 +84,7 @@ public class SunVoxLib
 	public static native int load_module_from_memory( int slot, byte[] data, int x, int y, int z );
 	public static native int sampler_load( int slot, int mod_num, String name, int sample_slot );
 	public static native int sampler_load_from_memory( int slot, int mod_num, byte[] data, int sample_slot );
+	public static native int sampler_set( int slot, int mod_num, int sample_slot, int par, int par_val, int set );
 	public static native int metamodule_load( int slot, int mod_num, String name );
 	public static native int metamodule_load_from_memory( int slot, int mod_num, byte[] data );
 	public static native int vplayer_load( int slot, int mod_num, String name );

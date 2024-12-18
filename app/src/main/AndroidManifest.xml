@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="net.arist.sunplay" 
-    android:versionCode="14"
-    android:versionName="1.4" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="net.arist.sunplay"
+    android:versionCode="15"
+    android:versionName="1.5" >
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -13,6 +15,7 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
             android:name="net.arist.sunplay.MainActivity"
+            android:exported="true"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
