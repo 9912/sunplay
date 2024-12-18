@@ -1,5 +1,7 @@
 package net.arist.sunplay;
 
+import static android.os.Build.VERSION.SDK_INT;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +11,10 @@ import java.util.List;
 import java.util.Arrays;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -93,18 +99,15 @@ public class MainActivity extends Activity {
 			}
 		}
 		Log.v( "CFG", cfg );
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-		    if (!Environment.isExternalStorageManager()) {
-		        try {
-		            var intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-		                    Uri.parse("package:" + packageName))
-		            startActivityForResult(intent, REQUEST_PERMISSION)
-		        } catch (e: Exception) {
-		            Logger.d(TAG, e.message)
-		            var intent = Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION)
-		            startActivityForResult(intent, REQUEST_PERMISSION)
-		        }
-		    }
+		if (SDK_INT >= Build.VERSION_CODES.R) {
+			ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.MANAGE_EXTERNAL_STORAGE}, 1);
+			if (!Environment.isExternalStorageManager()){
+				Intent intent = new Intent();
+				intent.setAction(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+				Uri uri = Uri.fromParts("package", this.getPackageName(), null);
+				intent.setData(uri);
+				startActivity(intent);
+			}
 		}
 
 		song_title = new TextView(this);
