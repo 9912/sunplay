@@ -76,7 +76,6 @@ public class MainActivity extends Activity {
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
 		SetSustainedPerformanceMode( true );
-		checkPermissions();
 		int optimal_buffer_size = GetAudioOutputBufferSize();
 		int optimal_sample_rate = GetAudioOutputSampleRate();
 		int sample_rate = 44100;
@@ -499,49 +498,5 @@ public class MainActivity extends Activity {
         return fileName.substring(fileName.lastIndexOf(".")+1);
         else return "";
     }
-    
-    /**
-	 * Checks the dynamically-controlled permissions and requests missing permissions from end user.
-	 */
-	protected void checkPermissions() {
-	  final List<String> missingPermissions = new ArrayList<String>();
-	  // check all required dynamic permissions
-	  for (final String permission : REQUIRED_SDK_PERMISSIONS) {
-	    final int result = ContextCompat.checkSelfPermission(this, permission);
-	    if (result != PackageManager.PERMISSION_GRANTED) {
-	      missingPermissions.add(permission);
-	    }
-	  }
-	  if (!missingPermissions.isEmpty()) {
-	    // request all missing permissions
-	    final String[] permissions = missingPermissions
-	        .toArray(new String[missingPermissions.size()]);
-	    ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE_ASK_PERMISSIONS);
-	  } else {
-	    final int[] grantResults = new int[REQUIRED_SDK_PERMISSIONS.length];
-	    Arrays.fill(grantResults, PackageManager.PERMISSION_GRANTED);
-	    onRequestPermissionsResult(REQUEST_CODE_ASK_PERMISSIONS, REQUIRED_SDK_PERMISSIONS,
-	        grantResults);
-	  }
-	}
-	
-	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
-	    @NonNull int[] grantResults) {
-	  switch (requestCode) {
-	    case REQUEST_CODE_ASK_PERMISSIONS:
-	      for (int index = permissions.length - 1; index >= 0; --index) {
-	        if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
-	          // exit the app if one permission is not granted
-	          Toast.makeText(this, "Required permission '" + permissions[index]
-	              + "' not granted, exiting", Toast.LENGTH_LONG).show();
-	          finish();
-	          return;
-	        }
-	      }
-	      // all permissions were granted
-	      break;
-	  }
-	}
 
 }
